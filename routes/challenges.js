@@ -20,7 +20,13 @@ router.get(
         .limit(1)
     )[0];
 
-    res.status(200).json({ challenge });
+    res
+      .status(200)
+      .json({
+        ...challenge,
+        isActive:
+          challenge === null ? moment(challenge.startDate).isBefore() : false,
+      });
   })
 );
 
@@ -59,11 +65,13 @@ router.post(
           clearInterval(ting);
           resolve();
         }
-      }, 2000);
+      }, 1000);
     });
 
     if (res2.data.result.status.code === 15) {
       //smart contract shit
+    } else {
+      res.status(200).json(res2.data.result);
     }
   })
 );
