@@ -20,13 +20,11 @@ router.get(
         .limit(1)
     )[0];
 
-    res
-      .status(200)
-      .json({
-        ...challenge,
-        isActive:
-          challenge === null ? moment(challenge.startDate).isBefore() : false,
-      });
+    res.status(200).json({
+      ...challenge,
+      isActive:
+        challenge === null ? moment(challenge.startDate).isBefore() : false,
+    });
   })
 );
 
@@ -34,7 +32,9 @@ router.post(
   "/challenge",
   handler(async (req, res) => {
     const { source, problemId } = req.body;
+    console.log(req.body);
 
+    console.log(source, problemId);
     let res1 = await axios.post(
       `https://${process.env.CUSTOMER_ID}.problems.sphere-engine.com/api/v4/submissions`,
       null,
@@ -52,7 +52,7 @@ router.post(
     let res2;
     await new Promise((resolve) => {
       const ting = setInterval(async () => {
-        res = await axios.get(
+        res2 = await axios.get(
           `https://${process.env.CUSTOMER_ID}.problems.sphere-engine.com/api/v4/submissions/${id}`,
           {
             params: {
@@ -65,11 +65,12 @@ router.post(
           clearInterval(ting);
           resolve();
         }
-      }, 1000);
+      }, 500);
     });
 
     if (res2.data.result.status.code === 15) {
       //smart contract shit
+      res.status(200).json({ message: "Success" });
     } else {
       res.status(200).json(res2.data.result);
     }
