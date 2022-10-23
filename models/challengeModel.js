@@ -21,6 +21,9 @@ const challengeSchema = mongoose.Schema({
     type: String,
     required: false,
   },
+  participants: [String],
+  solved: Boolean,
+  problemId: Number
 });
 
 module.exports = mongoose.model("Challenge", challengeSchema);
