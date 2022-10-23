@@ -59,6 +59,7 @@ router.get("/challenge", async (req, res) => {
 // Create new challenge
 router.post("/challenge", async (req, res) => {
   const body = req.body;
+  console.log(body.startDate, body.endDate);
   const challenge = {
     title: body.title,
     description: body.description,
@@ -99,7 +100,7 @@ router.post("/challenge", async (req, res) => {
       params: {
         access_token: process.env.PROBLEMS_KEY,
         name: challenge.title,
-        masterJudgeId: 1000,
+        masterjudgeId: 1000,
       },
     }
   );

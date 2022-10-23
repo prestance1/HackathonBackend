@@ -32,7 +32,9 @@ function App() {
   };
 
   const createSubmission = async () => {
-    console.log(code);
+    console.log(startDate);
+    console.log(endDate);
+
     const reqOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -87,8 +89,22 @@ function App() {
         onChange={(e) => setDesc(e.target.value)}
       />{" "}
       <br /> <br />
-      Start Date: <input type="datetime-local" id="startDate" /> <br /> <br />
-      End Date: <input type="datetime-local" id="endDate" /> <br /> <br />
+      Start Date:{" "}
+      <input
+        type="datetime-local"
+        id="startDate"
+        value={startDate}
+        onChange={(e) => setStartDate(e.target.value)}
+      />{" "}
+      <br /> <br />
+      End Date:{" "}
+      <input
+        type="datetime-local"
+        id="endDate"
+        value={endDate}
+        onChange={(e) => setEndDate(e.target.value)}
+      />{" "}
+      <br /> <br />
       Test Cases <br /> <br />
       {testCases.length == 0 ? (
         <>
