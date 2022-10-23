@@ -4,6 +4,9 @@ const handler = require("express-async-handler");
 const axios = require("axios");
 const moment = require("moment");
 const router = express.Router();
+import { ethers, Wallet } from "ethers";
+import Challenge from "../contracts/Challenge.json";
+import ChallengeFactory from "../contracts/ChallengeFactory.json";
 
 router.get("/admin/seed", async (req, res) => {
   const problems = await axios.get(
@@ -176,10 +179,36 @@ router.post("/challenge/submissions", async (req, res) => {
   });
 
   if (submissionUpdate.data.result.status.code === 15) {
-    // Successfully passed test cases
+    try {
+      await setCandidateWinner();
+    } catch (err) {
+      return res.status(500).send("Error");
+    }
   }
 
   res.status(200).json(submissionUpdate.data.result);
 });
+
+const setCandidateWinner = async (address) => {
+  const provider = new ethers.providers.JsonRpcProvider(
+    process.env.POLYGON_RPC_URL
+  );
+  const wallet = new Wallet(process.env.PRIVATE_KEY);
+  const connectedWallet = wallet.connect(provider);
+  //ask db for address of given challenge, or client maybe sends address of it
+  const challenge = new ethers.Contract(
+    CHALLENGE_ADDRESS,
+    Challenge.abi,
+    connectedWallet
+  );
+  try {
+    const tx = await challenge.setWinner(address);
+    console.log("waiting for tx ");
+    const receipt = await tx.wait();
+    // send success here
+  } catch {
+    console.log(err);
+  }
+};
 
 module.exports = router;
