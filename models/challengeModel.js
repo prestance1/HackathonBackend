@@ -19,11 +19,11 @@ const challengeSchema = mongoose.Schema({
   },
   address: {
     type: String,
-    required: false,
+    required: true,
   },
   participants: [String],
   solved: Boolean,
-  problemId: Number
+  problemId: Number,
 });
 
 module.exports = mongoose.model("Challenge", challengeSchema);
